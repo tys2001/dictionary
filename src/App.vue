@@ -1,12 +1,13 @@
 <template>
   <div id="app">
+    <Dictionary />
   </div>
 </template>
 
 <script>
+import Dictionary from "@/components/Dictionary.vue";
 export default {
-  components: {
-  },
+  components: { Dictionary },
   name: "app",
   data() {
     return {
