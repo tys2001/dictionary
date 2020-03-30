@@ -20,25 +20,42 @@ export default {
       formParams
     )
   },
-  downloadDictionary(cursor) {
-    return axios.get(
-      "https://tyspine.com/service/dictionary/getEjDictionary",
-      { params: { cursor: cursor || 0 } }
-    ).then(response => {
-      this.putItems(response.data.result);
-      if (response.data.next) this.downloadDictionary(response.data.next);
-    });
+  downloadDictionary() {
+    return this.clearTable()
+      .then(() => this.getUnit(0));
+  },
+  getUnit(cursor) {
+    return axios
+      .get(
+        "https://tyspine.com/service/dictionary/getEjDictionary",
+        { params: { cursor } }
+      )
+      .then(response => {
+        this.putItems(response.data.result);
+        if (response.data.next) this.getUnit(response.data.next);
+        else alert("辞書データ取得が完了しました");
+      });
   },
   putItems(items) {
     const db = new Dexie("dictionary");
     const version = 1;
-    db.version(version).stores({ ej: "id,word" });
+    db.version(version).stores({ ej: "id,search_word" });
 
     return db.transaction("rw", db.ej, () => {
       db.ej.bulkPut(items);
     })
-      .then(() => {
-      })
+      .catch(error => {
+        alert("Error: " + error);
+      });
+  },
+  clearTable() {
+    const db = new Dexie("dictionary");
+    const version = 1;
+    db.version(version).stores({ ej: "id,search_word" });
+
+    return db.transaction("rw", db.ej, () => {
+      db.ej.clear();
+    })
       .catch(error => {
         alert("Error: " + error);
       });
@@ -46,10 +63,13 @@ export default {
   getItems(keyword) {
     const db = new Dexie("dictionary");
     const version = 1;
-    db.version(version).stores({ ej: "id,word" });
+    db.version(version).stores({ ej: "id,search_word" });
 
-    return db.transaction("rw", db.ej, () => {
-      return db.ej.where("word").startsWithIgnoreCase(keyword).limit(20).toArray();
+    return db.transaction("r", db.ej, () => {
+      return db.ej
+        .where("search_word")
+        .startsWithIgnoreCase(keyword)
+        .sortBy("search_word");
     })
       .catch(error => {
         alert("Error: " + error);
