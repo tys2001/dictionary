@@ -19,12 +19,18 @@ export default {
 </script>
 
 <style>
+html,
+body {
+  height: 100%;
+}
 #app {
+  height: 100%;
   font-family: verdana, "ヒラギノ丸ゴ ProN W4", "Hiragino Maru Gothic ProN",
     "メイリオ", "Meiryo", "ＭＳ Ｐゴシック", "MS PGothic", Sans-Serif;
 }
 * {
   user-select: none;
+  overscroll-behavior: none;
 }
 input {
   user-select: auto;

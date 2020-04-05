@@ -89,31 +89,22 @@ export default {
 
 <style scoped>
 .root {
-  width: 100vw;
-  height: 100vh;
+  height: 100%;
   overflow: hidden;
+  display: grid;
+  grid-template-rows: 60px 0.5fr 0.5fr 60px;
 }
 .header-menu {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  height: 60px;
   padding: 10px;
   background-color: var(--info);
 }
 .item-detail {
-  margin-top: 60px;
-  height: calc(50% - 60px);
+  overflow-y: scroll;
 }
 .search-result {
-  height: calc(50% - 60px);
   overflow-y: scroll;
 }
 .search-input {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  height: 60px;
   padding: 10px;
   background-color: var(--info);
 }
